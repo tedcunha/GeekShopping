@@ -34,17 +34,43 @@ namespace GeekShopping.ProductAPI.Repository
             return _mapper.Map<ProductVO>(product);
         }
 
-        public Task<ProductVO> Create(ProductVO vo)
+        public async Task<ProductVO> Create(ProductVO vo)
         {
-            throw new NotImplementedException();
+            // Convertido para Entidade Product
+            Product product = _mapper.Map<Product>(vo);
+            // Adicionando 
+            _context.Products.Add(product);
+            // Salvando
+            await _context.SaveChangesAsync();
+            // Devolvendo um VO
+            return _mapper.Map<ProductVO>(product);
         }
-        public Task<ProductVO> Update(ProductVO vo)
+        public async Task<ProductVO> Update(ProductVO vo)
         {
-            throw new NotImplementedException();
+            // Convertido para Entidade Product
+            Product product = _mapper.Map<Product>(vo);
+            // Alterando
+            _context.Products.Update(product);
+            // Salvando
+            await _context.SaveChangesAsync();
+            // Devolvendo um VO
+            return _mapper.Map<ProductVO>(product);
         }
-        public Task<bool> Delete(long id)
+        public async Task<bool> Delete(long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                // Indo no banco e fazendo o Bind da tabela Products para o Objeto Product
+                Product product = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+                if (product == null) return false;
+                _context.Products.Remove(product);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }
