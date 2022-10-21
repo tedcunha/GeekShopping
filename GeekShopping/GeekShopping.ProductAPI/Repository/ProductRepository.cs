@@ -29,7 +29,9 @@ namespace GeekShopping.ProductAPI.Repository
         public async Task<ProductVO> FindById(long id)
         {
             // Indo no banco e fazendo o Bind da tabela Products para o Objeto Product
-            Product product = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
+            Product product = await _context.Products
+                .Where(p => p.Id == id)
+                .FirstOrDefaultAsync() ?? new Product();
             // Convertendo da Entidade Products para o VO ProductVO
             return _mapper.Map<ProductVO>(product);
         }
@@ -61,8 +63,10 @@ namespace GeekShopping.ProductAPI.Repository
             try
             {
                 // Indo no banco e fazendo o Bind da tabela Products para o Objeto Product
-                Product product = await _context.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
-                if (product == null) return false;
+                Product product = await _context.Products
+                    .Where(p => p.Id == id)
+                    .FirstOrDefaultAsync() ?? new Product();
+                if (product.Id <= 0) return false;
                 _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
                 return true;
