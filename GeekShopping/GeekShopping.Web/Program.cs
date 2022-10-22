@@ -1,7 +1,15 @@
+using GeekShopping.Web.Services;
+using GeekShopping.Web.Services.IServices;
+using Microsoft.Extensions.DependencyInjection;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Adicionando o Client Ineção de Dependencia.
+builder.Services.AddHttpClient<IProductService, ProductService>(
+    c => c.BaseAddress = new Uri(builder.Configuration["ServiceUrls:ProductAPI"]));
 
 var app = builder.Build();
 
