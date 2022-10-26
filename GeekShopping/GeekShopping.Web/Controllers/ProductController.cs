@@ -28,11 +28,14 @@ namespace GeekShopping.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var respnse = await _productService.CreateProduct(model);
+                var response = await _productService.CreateProduct(model);
+                if (response != null)
+                {
+                    return RedirectToAction(nameof(ProductIndex));
+                }
 
             }
-            return View(products);
+            return View(model);
         }
-
     }
 }
